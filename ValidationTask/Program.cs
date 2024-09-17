@@ -30,6 +30,12 @@
         }
         static bool ValidName(string name)
         {
+            bool valid = false;
+            for (int i = 0; i < name.Length; i++)
+            {
+                if (int.Parse(name.Substring(i, 1)) == (65-122) ) {  }
+                
+            }
             // name must be at least two characters and contain only letters
         }
 
