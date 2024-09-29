@@ -41,12 +41,24 @@ namespace ValidationTask
             }
             Console.Write("Enter Password: ");
             password = Console.ReadLine();
+            while (ValidPassword(password) != true)
+            {
+                Console.Write("Enter Password: ");
+                password = Console.ReadLine();
+                ValidPassword(password);
+            }
             Console.Write("Enter email address: ");
             emailAddress = Console.ReadLine();
+            while (validEmail(emailAddress) != true)
+            {
+                Console.Write("Enter email address: ");
+                emailAddress = Console.ReadLine();
+
+            }
 
 
-           // username = createUserName(firstName,lastName,age);
-          //  Console.WriteLine($"Username is {username}, you have successfully registered please remember your password");
+            username = createUserName(firstName, lastName, age);
+            Console.WriteLine($"Username is {username}, you have successfully registered please remember your password");
 
             //  Test your program with a range of tests to show all validation works
             // Show your evidence in the Readme
@@ -84,8 +96,9 @@ namespace ValidationTask
 
                 for (int i = 0; i < surname.Length; i++)
                 {
-                    if (Convert.ToInt32(Convert.ToChar(surname.Substring(i, 1))) >= 65 && Convert.ToInt32(Convert.ToChar(surname.Substring(i, 1))) <= 122 && surname.Length >= 2 && Convert.ToInt32(Convert.ToChar(surname.Substring(i, 1))) > 96 && Convert.ToInt32(Convert.ToChar(surname.Substring(i, 1))) < 91)
+                    if (Convert.ToInt32(Convert.ToChar(surname.Substring(i, 1))) >= 65 && Convert.ToInt32(Convert.ToChar(surname.Substring(i, 1))) <= 122 && surname.Length >= 2 )
                     {
+
                         name2 = true;
                     }
                 }
@@ -109,7 +122,7 @@ namespace ValidationTask
 
         static bool ValidPassword(string password)
         {   bool meetscriteria = false;
-            if (password.Length >= 8 && )
+            if (password.Length >= 8 )
             {
                 for (int i = 0; i < password.Length; i++)
                 {
@@ -119,8 +132,12 @@ namespace ValidationTask
                         {
                            
                             if (Convert.ToInt32(Convert.ToChar(password.Substring(i, 1))) < 96 && Convert.ToInt32(Convert.ToChar(password.Substring(i, 1))) > 91 && Convert.ToInt32(Convert.ToChar(password.Substring(i, 1))) > 122 && Convert.ToInt32(Convert.ToChar(password.Substring(i, 1))) < 65)
-                            {
-                                meetscriteria = true;
+                            {   
+
+                                if (Convert.ToInt32( password[i]) - Convert.ToInt32(password[i-1]) != 1 && Convert.ToInt32(password[i+1]) - Convert.ToInt32(password[i]) != 1)
+                                {
+                                    meetscriteria = true;
+                                }
                             }
                         }
                     }
@@ -146,11 +163,39 @@ namespace ValidationTask
 
         }
         static bool validEmail(string email)
-        {   
+        {   bool meetscriteria = false;
+            int n = 0;
+            int count = 0;
             if (email.Contains('@') == true && email.Contains('.') == true )
             {
-               
+             if (email.IndexOf('@') - 2 >= 0 && Convert.ToString( email.IndexOf('.') + 2) != null)
+                {
+                    while ((n = email.IndexOf('@', n) + 1) != 0)
+                    {
+                        n++;
+                        count++;
+                    }
+                    if (count < 1)
+                    {
+                        for (int i = 0; i < email.Length; i++)
+                        {
+                            if (Convert.ToInt32(email[i]) < 65 || Convert.ToInt32(email[i]) > 122)
+                            {
+                                break;
+                            }
+                            else if (Convert.ToInt32(email[i]) < 97 || Convert.ToInt32(email[i]) > 90)
+                            {
+                                break;
+                            }
+                            else
+                            {
+                                meetscriteria = true;
+                            }
+                        }
+                    }
+                }
             }
+            return meetscriteria;
             // a valid email address
             // has at least 2 characters followed by an @ symbol
             // has at least 2 characters followed by a .
@@ -159,17 +204,18 @@ namespace ValidationTask
             // does not contain any other non letter or number characters
 
         }
-        //static string createUserName(string firstName, string lastName, int age)
-        //{
-        //    // username is made up from:
-        //    // first two characters of first name
-        //    // last two characters of last name
-        //    // age
-        //    //e.g. Bob Smith aged 34 would have the username Both34
+        static string createUserName(string firstName, string lastName, int age)
+        {   
+            string username = firstName.Substring(0,2) + lastName.Substring(lastName.Length-3,2) + age;
+            // username is made up from:
+            // first two characters of first name
+            // last two characters of last name
+            // age
+            //e.g. Bob Smith aged 34 would have the username Both34
+            return username;
 
 
-
-        //}
+        }
 
     }
 }
