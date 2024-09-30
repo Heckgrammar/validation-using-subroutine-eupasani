@@ -110,7 +110,7 @@ namespace ValidationTask
         static bool validAge(int age)
         {
             bool inRange = false;
-            if (11 <= age && age >= 18)
+            if (age>=11 && age <= 18)
             {
                 inRange = true;
             }
@@ -122,24 +122,46 @@ namespace ValidationTask
 
         static bool ValidPassword(string password)
         {   bool meetscriteria = false;
-            if (password.Length >= 8 )
+            bool lowercase = false;
+            bool uppercase = false; 
+            bool nonletter = false;
+            bool noconsecutivechars = false;
+            if (password.Length >= 8)
             {
                 for (int i = 0; i < password.Length; i++)
                 {
-                    if (Convert.ToInt32(Convert.ToChar(password.Substring(i,1))) >= 65 && Convert.ToInt32(Convert.ToChar(password.Substring(i, 1))) <= 90)
+                    if (Convert.ToInt32(Convert.ToChar(password.Substring(i, 1))) >= 65 && Convert.ToInt32(Convert.ToChar(password.Substring(i, 1))) <= 90)
                     {
-                        if (Convert.ToInt32(Convert.ToChar(password.Substring(i, 1))) >= 97 && Convert.ToInt32(Convert.ToChar(password.Substring(i, 1))) <= 122)
-                        {
-                           
-                            if (Convert.ToInt32(Convert.ToChar(password.Substring(i, 1))) < 96 && Convert.ToInt32(Convert.ToChar(password.Substring(i, 1))) > 91 && Convert.ToInt32(Convert.ToChar(password.Substring(i, 1))) > 122 && Convert.ToInt32(Convert.ToChar(password.Substring(i, 1))) < 65)
-                            {   
+                        uppercase = true;
+                    }
+                    if (Convert.ToInt32(Convert.ToChar(password.Substring(i, 1))) >= 97 && Convert.ToInt32(Convert.ToChar(password.Substring(i, 1))) <= 122)
+                    {
+                        lowercase = true;
+                    }
 
-                                if (Convert.ToInt32( password[i]) - Convert.ToInt32(password[i-1]) != 1 && Convert.ToInt32(password[i+1]) - Convert.ToInt32(password[i]) != 1)
-                                {
-                                    meetscriteria = true;
-                                }
-                            }
+                    if (Convert.ToInt32(Convert.ToChar(password.Substring(i, 1))) < 96 && Convert.ToInt32(Convert.ToChar(password.Substring(i, 1))) > 91 || Convert.ToInt32(Convert.ToChar(password.Substring(i, 1))) > 122 && Convert.ToInt32(Convert.ToChar(password.Substring(i, 1))) < 65)
+                    {
+                        nonletter = true;
+
+                    }
+                    else if (Convert.ToInt32(Convert.ToChar(password.Substring(i, 1))) > 122 || Convert.ToInt32(Convert.ToChar(password.Substring(i, 1))) < 65)
+                    {
+                        nonletter = true;
+                    }
+                    if (i > 0 && i<password.Length-1)
+                    {
+                        if (Convert.ToInt32(Convert.ToChar(password.Substring(i, 1))) - Convert.ToInt32(Convert.ToChar(password.Substring(i - 1, 1))) == 1 && Convert.ToInt32(Convert.ToChar(password.Substring(i + 1, 1))) - Convert.ToInt32(Convert.ToChar(password.Substring(i, 1))) == 1)
+                        {
+                            noconsecutivechars = false;
                         }
+                        else
+                        {
+                            noconsecutivechars = true;
+                        }
+                    }
+                    if (lowercase == true && uppercase == true && nonletter == true && noconsecutivechars == true)
+                    {
+                        meetscriteria = true;
                     }
                 }
             }
@@ -164,38 +186,70 @@ namespace ValidationTask
         }
         static bool validEmail(string email)
         {   bool meetscriteria = false;
+            bool containsatanddot  = false; 
+            bool twocharsb4at = false;
+            bool twocharsafterdot = false;
+            bool oneat = false;
+            bool nononletterornumbers = false;
+            bool containsnums = false;
             int n = 0;
             int count = 0;
             if (email.Contains('@') == true && email.Contains('.') == true )
             {
-             if (email.IndexOf('@') - 2 >= 0 && Convert.ToString( email.IndexOf('.') + 2) != null)
+             containsatanddot = true;
+            }
+            if (email.IndexOf('@') - 2 >= 0 && Convert.ToString(email.IndexOf('.') + 2) != null)
+            {
+               twocharsafterdot = true;
+                twocharsb4at = true;
+            }
+            while ((n = email.IndexOf('@', n) + 1) != 0)
+            {
+                n++;
+                count++;
+            }
+            if (count < 1)
+            {
+               oneat = true;
+            }
+            for (int i = 0; i < email.Length; i++)
+            {
+                if (Convert.ToInt32(Convert.ToChar(email.Substring(i, 1))) < 65 || Convert.ToInt32(Convert.ToChar(email.Substring(i, 1))) > 122)
                 {
-                    while ((n = email.IndexOf('@', n) + 1) != 0)
+                    if (Convert.ToInt32(Convert.ToChar(email.Substring(i, 1))) == 46 || Convert.ToInt32(Convert.ToChar(email.Substring(i, 1))) == 64)
                     {
-                        n++;
-                        count++;
+                        nononletterornumbers = true;
                     }
-                    if (count < 1)
+                    else
                     {
-                        for (int i = 0; i < email.Length; i++)
-                        {
-                            if (Convert.ToInt32(email[i]) < 65 || Convert.ToInt32(email[i]) > 122)
-                            {
-                                break;
-                            }
-                            else if (Convert.ToInt32(email[i]) < 97 || Convert.ToInt32(email[i]) > 90)
-                            {
-                                break;
-                            }
-                            else
-                            {
-                                meetscriteria = true;
-                            }
-                        }
+                        nononletterornumbers = false;
+
                     }
                 }
+                if (Convert.ToInt32(Convert.ToChar(email.Substring(i,1))) < 97 || Convert.ToInt32(Convert.ToChar(email.Substring(i, 1))) > 90)
+                {
+                    if (Convert.ToInt32(Convert.ToChar(email.Substring(i, 1))) == 46 || Convert.ToInt32(Convert.ToChar(email.Substring(i, 1))) == 64)
+                    {
+                        nononletterornumbers = true;
+                    }
+                    else
+                    {
+                        nononletterornumbers = false;
+                    }
+                    }
+               
+                else
+                {
+                    nononletterornumbers = true;
+                }
+            }
+            if (containsatanddot == true && twocharsb4at == true && twocharsafterdot == true && oneat == true && nononletterornumbers == true)
+            {
+                meetscriteria = true;
+                
             }
             return meetscriteria;
+
             // a valid email address
             // has at least 2 characters followed by an @ symbol
             // has at least 2 characters followed by a .
